@@ -2,23 +2,26 @@
 from selenium import webdriver
 from decouple import config
 from selenium.webdriver.chrome.options import Options
-from flask import Response
-from flask.ext.api import FlaskAPI
+from flask import Flask, render_template
 
-app = FlaskAPI(__name__)
+app = Flask(__name__)
 
 @app.route('/bot')
 def olx_bot():
 
-    GOOGLE_CHROME_BIN = config('GOOGLE_CHROME_BIN')
-    CHROMEDRIVER_PATH = config('CHROMEDRIVER_PATH')
+    if config('LOCAL', default=False, cast=bool):
+        driver = webdriver.Chrome()
+    else:
+        GOOGLE_CHROME_BIN = config('GOOGLE_CHROME_BIN')
+        CHROMEDRIVER_PATH = config('CHROMEDRIVER_PATH')
 
-    chrome_options = Options()
-    chrome_options.binary_location = GOOGLE_CHROME_BIN
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--no-sandbox')
+        chrome_options = Options()
+        chrome_options.binary_location = GOOGLE_CHROME_BIN
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--no-sandbox')
 
-    driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+        driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+
     driver.get('https://www3.olx.com.br/account/form_login/')
 
     email = driver.find_element_by_id('login_email')
@@ -30,7 +33,8 @@ def olx_bot():
 
     login.click()
 
-    return Response("Logou", mimetype='text/html')
+    return render_template('sucess.html')
+    # return Response("Logou", mimetype='text/html')
     # listAllLinks = []
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/grande-florianopolis/veiculos')
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/veiculos')
@@ -110,7 +114,7 @@ def getUrl(driver):
 
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)
 
 # if __name__ == '__main__':
 #     olx_bot()
