@@ -12,28 +12,28 @@ app = FlaskAPI(__name__)
 
 @app.route('/bot')
 def olx_bot():
-    return "OK"
-    # GOOGLE_CHROME_BIN = config('GOOGLE_CHROME_BIN')
-    # CHROMEDRIVER_PATH = config('CHROMEDRIVER_PATH')
-    #
-    # chrome_options = Options()
-    # chrome_options.binary_location = GOOGLE_CHROME_BIN
-    # chrome_options.add_argument('--disable-gpu')
-    # chrome_options.add_argument('--no-sandbox')
-    #
-    # driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
-    # driver.get('https://www3.olx.com.br/account/form_login/')
-    #
-    # email = driver.find_element_by_id('login_email')
-    # password = driver.find_element_by_id('login_password')
-    # login = driver.find_element_by_id('bt_submit_login')
-    #
-    # email.send_keys('criciuma@agenteomni.com.br')
-    # password.send_keys('260102')
-    #
-    # login.click()
 
+    GOOGLE_CHROME_BIN = config('GOOGLE_CHROME_BIN')
+    CHROMEDRIVER_PATH = config('CHROMEDRIVER_PATH')
 
+    chrome_options = Options()
+    chrome_options.binary_location = GOOGLE_CHROME_BIN
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+
+    driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+    driver.get('https://www3.olx.com.br/account/form_login/')
+
+    email = driver.find_element_by_id('login_email')
+    password = driver.find_element_by_id('login_password')
+    login = driver.find_element_by_id('bt_submit_login')
+
+    email.send_keys('criciuma@agenteomni.com.br')
+    password.send_keys('260102')
+
+    login.click()
+
+    return "logou"
     # listAllLinks = []
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/grande-florianopolis/veiculos')
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/veiculos')
