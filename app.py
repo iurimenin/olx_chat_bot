@@ -2,7 +2,7 @@
 from selenium import webdriver
 from decouple import config
 from selenium.webdriver.chrome.options import Options
-from flask import render_template_string
+from flask import Response
 from flask.ext.api import FlaskAPI
 
 app = FlaskAPI(__name__)
@@ -30,7 +30,7 @@ def olx_bot():
 
     login.click()
 
-    return render_template_string("Logou")
+    return Response("Logou", mimetype='text/html')
     # listAllLinks = []
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/grande-florianopolis/veiculos')
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/veiculos')
