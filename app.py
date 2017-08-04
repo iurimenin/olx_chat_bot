@@ -1,11 +1,8 @@
 # encoding=utf8
 from selenium import webdriver
-import json
-import time
-import os
 from decouple import config
-
-from flask import json, Response
+from selenium.webdriver.chrome.options import Options
+from flask import render_template_string
 from flask.ext.api import FlaskAPI
 
 app = FlaskAPI(__name__)
@@ -33,7 +30,7 @@ def olx_bot():
 
     login.click()
 
-    return "logou"
+    return render_template_string("Logou")
     # listAllLinks = []
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/grande-florianopolis/veiculos')
     # listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/veiculos')
