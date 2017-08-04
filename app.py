@@ -12,10 +12,10 @@ app = FlaskAPI(__name__)
 
 @app.route('/bot')
 def olx_bot():
-
-    GOOGLE_CHROME_BIN = config('GOOGLE_CHROME_BIN')
-    CHROMEDRIVER_PATH = config('CHROMEDRIVER_PATH')
     return "OK"
+    # GOOGLE_CHROME_BIN = config('GOOGLE_CHROME_BIN')
+    # CHROMEDRIVER_PATH = config('CHROMEDRIVER_PATH')
+    #
     # chrome_options = Options()
     # chrome_options.binary_location = GOOGLE_CHROME_BIN
     # chrome_options.add_argument('--disable-gpu')
