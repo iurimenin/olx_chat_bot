@@ -3,10 +3,14 @@ import threading
 from selenium import webdriver
 from decouple import config
 import json
+from email_sender import send
 from selenium.webdriver.chrome.options import Options
 
 class Scrapper(threading.Thread):
     def run(self):
+
+        emailOlx = 'criciuma@agenteomni.com.br'
+
         if config('LOCAL', default=False, cast=bool):
             driver = webdriver.Chrome()
         else:
@@ -26,7 +30,7 @@ class Scrapper(threading.Thread):
         password = driver.find_element_by_id('login_password')
         login = driver.find_element_by_id('bt_submit_login')
 
-        email.send_keys('criciuma@agenteomni.com.br')
+        email.send_keys(emailOlx)
         password.send_keys('260102')
 
         login.click()
@@ -78,8 +82,9 @@ class Scrapper(threading.Thread):
             else:
                 continue
 
-        returnMessage = 'Foram enviadas ' + str(countSendMessage) + ' mensagens!!'
-        print returnMessage
+        emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas ' + \
+                   str(12) + ' novas mensagens!!'
+        send(emailOlx, emailMsg)
 
 def getLinks(driver, urlBase):
 
