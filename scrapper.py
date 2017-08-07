@@ -2,14 +2,15 @@
 import threading
 from selenium import webdriver
 from decouple import config
-import json
+import json, time
 from email_sender import send
 from selenium.webdriver.chrome.options import Options
 
 class Scrapper(threading.Thread):
     def run(self):
 
-        emailOlx = 'criciuma@agenteomni.com.br'
+        emailOlx = config('EMAIL')
+        passwordOlx = config('PASSWORD')
 
         if config('LOCAL', default=False, cast=bool):
             driver = webdriver.Chrome()
@@ -31,7 +32,7 @@ class Scrapper(threading.Thread):
         login = driver.find_element_by_id('bt_submit_login')
 
         email.send_keys(emailOlx)
-        password.send_keys('260102')
+        password.send_keys(passwordOlx)
 
         login.click()
 

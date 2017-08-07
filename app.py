@@ -1,5 +1,6 @@
 from scrapper import Scrapper
 from flask import Flask, render_template
+from decouple import config
 
 app = Flask(__name__)
 
@@ -14,4 +15,7 @@ def olx_bot():
     return render_template('sucess.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    if config('LOCAL', default=False, cast=bool):
+        app.run(host='0.0.0.0', debug=True)
+    else:
+        app.run(host='0.0.0.0')

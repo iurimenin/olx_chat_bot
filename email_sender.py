@@ -1,12 +1,13 @@
 # encoding=utf8
 import smtplib
+from decouple import config
 
 def send(emailTo, emailMsg):
     print emailMsg
 
     recipients = [emailTo, 'iurimenin@gmail.com']
-    emailSender = 'olx.chat.bot@gmail.com'
-    passwordSender = 'chatbot@020293'
+    emailSender = config('EMAILSENDER')
+    passwordSender = config('PASSWORDSENDER')
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.ehlo()
     server.starttls()
