@@ -13,9 +13,12 @@ Para rodar tanto locamente quanto no heroku devem ser configuradas as seguintes 
 *Para LOCAL:*
 * Deve ser baixado e adicionado o chromedriver na pasta bin da sua virtualenv ou configurar o caminho correto para o mesmo
 
-*Para Heroku devem ser adicionados os seguintes Buildpacks*
-* https://github.com/heroku/heroku-buildpack-xvfb-google-chrome.git
-* https://github.com/heroku/heroku-buildpack-chromedriver.git
-* heroku/python
+Para Heroku:
+* Adicionar os seguintes Buildpacks
+  * https://github.com/heroku/heroku-buildpack-xvfb-google-chrome.git
+  * https://github.com/heroku/heroku-buildpack-chromedriver.git
+  * heroku/python
+* Mudar o stack para cedar-14 
+
 
 OBS: Está fixo no código uma pesquisa "caminhão", para uma região especifica de Santa Catarina.
