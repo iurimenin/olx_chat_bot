@@ -10,4 +10,4 @@ Para rodar deve ser configuradas as seguintes variaveis de ambiente:
 * EMAILSENDER=E-mail para ser o remetente ao fim da execução
 * PASSWORDSENDER=Senha do e-mail remetente
 
-OBS: Está fixo no código uma pesquisa e para uma região especifica.
+OBS: Está fixo no código uma pesquisa "caminhão", para uma região especifica de Santa Catarina.
