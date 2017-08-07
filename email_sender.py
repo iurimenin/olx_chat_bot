@@ -3,7 +3,6 @@ import smtplib
 from decouple import config
 
 def send(emailTo, emailMsg):
-    print emailMsg
 
     recipients = [emailTo, 'iurimenin@gmail.com']
     emailSender = config('EMAILSENDER')
