@@ -2,11 +2,11 @@
 
 Chat bot para enviar mensagens automaticas no OLX.
 
-Para LOCAL:
+Para executar localmente:
 * Criar um arquivo chamado .env para adicionar as váriaveis de ambiente.
 * Deve ser baixado e adicionado o chromedriver na pasta bin da sua virtualenv ou configurar o caminho correto para o mesmo
 
-Para Heroku:
+Para executar no Heroku:
 * Adicionar os seguintes Buildpacks
   * https://github.com/heroku/heroku-buildpack-xvfb-google-chrome.git
   * https://github.com/heroku/heroku-buildpack-chromedriver.git
