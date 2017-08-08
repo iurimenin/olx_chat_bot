@@ -8,9 +8,16 @@ from email_sender import send
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+
+def setExecution(param):
+    Scrapper.isExecution = param
+
 class Scrapper(threading.Thread):
+    isExecution = False
+
     def run(self):
 
+        setExecution(True)
         emailOlx = config('EMAIL')
         passwordOlx = config('PASSWORD')
 
@@ -43,7 +50,7 @@ class Scrapper(threading.Thread):
                        '(capital de giro) de caminhões usados à partir do ano de 1970, sem restrição de marca e ' \
                        'modelo, e com foco em primeiro caminhão. Estou à disposição, ' \
                        'att Oliandro Omni Financeira 48 999249090 (Tim e Whatsapp)'
-                        
+
         listAllLinks = []
         listAllLinks = listAllLinks + getLinks(driver,'http://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/veiculos/caminhoes-onibus-e-vans')
         listAllLinks = listAllLinks + getLinks(driver,'http://sc.olx.com.br/oeste-de-santa-catarina/regioes-de-curitibanos-e-c-dos-lages/veiculos/caminhoes-onibus-e-vans')
@@ -92,6 +99,7 @@ class Scrapper(threading.Thread):
         emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas ' + \
                    str(countSendMessage) + ' novas mensagens!!'
         send(emailOlx, emailMsg)
+        setExecution(False)
 
 def getLinks(driver, urlBase):
 
