@@ -36,11 +36,7 @@ class Scrapper(threading.Thread):
 
         login.click()
 
-        chat_message = 'Caro amigo, vi que estás vendendo seu caminhão, onde caso algum cliente se interessar nele, '
-                    'e precisar financiar uma parte, estou à disposição, faço financiamento e '
-                    'refinanciamento (capital de giro) de caminhões usados à partir do ano de 1970, '
-                    'sem restrição de marca e modelo, e com foco em primeiro caminhão. '
-                    'Estou à disposição, att Oliandro Omni Financeira 48 999249090 (Tim e Whatsapp)'.decode('UTF-8')
+        chat_message = 'Caro amigo, vi que estás vendendo seu caminhão, onde caso algum cliente se interessar nele, e precisar financiar uma parte, estou à disposição, faço financiamento e refinanciamento (capital de giro) de caminhões usados à partir do ano de 1970, sem restrição de marca e modelo, e com foco em primeiro caminhão. Estou à disposição, att Oliandro Omni Financeira 48 999249090 (Tim e Whatsapp)'
                         
         listAllLinks = []
         listAllLinks = listAllLinks + getLinks(driver,
