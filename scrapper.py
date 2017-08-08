@@ -36,7 +36,11 @@ class Scrapper(threading.Thread):
 
         login.click()
 
-        chat_message = 'Caro amigo, vi que estás vendendo seu caminhão, onde caso algum cliente se interessar nele, e precisar financiar uma parte, estou à disposição, faço financiamento e refinanciamento (capital de giro) de caminhões usados à partir do ano de 1970, sem restrição de marca e modelo, e com foco em primeiro caminhão. Estou à disposição, att Oliandro Omni Financeira 48 999249090 (Tim e Whatsapp)'
+        chat_message = 'Caro amigo, vi que estás vendendo seu caminhão, onde caso algum cliente se interessar nele, ' \
+                       'e precisar financiar uma parte, estou à disposição, faço financiamento e refinanciamento ' \
+                       '(capital de giro) de caminhões usados à partir do ano de 1970, sem restrição de marca e ' \
+                       'modelo, e com foco em primeiro caminhão. Estou à disposição, ' \
+                       'att Oliandro Omni Financeira 48 999249090 (Tim e Whatsapp)'
                         
         listAllLinks = []
         listAllLinks = listAllLinks + getLinks(driver,
@@ -80,7 +84,7 @@ class Scrapper(threading.Thread):
                 continue
 
         emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas ' + \
-                   str(12) + ' novas mensagens!!'
+                   str(countSendMessage) + ' novas mensagens!!'
         send(emailOlx, emailMsg)
 
 def getLinks(driver, urlBase):

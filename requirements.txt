@@ -1,4 +1,4 @@
 selenium
-Flask==0.10.1
-python-decouple==3.0
+Flask
+python-decouple
 gunicorn
