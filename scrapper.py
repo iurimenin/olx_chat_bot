@@ -1,9 +1,11 @@
 # encoding=utf8
+import sys
+import logging
 import threading
-from selenium import webdriver
-from decouple import config
 import json, time
+from decouple import config
 from email_sender import send
+from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 class Scrapper(threading.Thread):
@@ -43,44 +45,48 @@ class Scrapper(threading.Thread):
                        'att Oliandro Omni Financeira 48 999249090 (Tim e Whatsapp)'
                         
         listAllLinks = []
-        listAllLinks = listAllLinks + getLinks(driver,
-                                               'http://sc.olx.com.br/florianopolis-e-regiao/grande-florianopolis/veiculos')
-        listAllLinks = listAllLinks + getLinks(driver,
-                                               'http://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/veiculos')
-        listAllLinks = listAllLinks + getLinks(driver,
-                                               'http://sc.olx.com.br/oeste-de-santa-catarina/regioes-de-curitibanos-e-c-dos-lages/veiculos')
-        listAllLinks = listAllLinks + getLinks(driver, 'http://sc.olx.com.br/norte-de-santa-catarina/veiculos/')
+        listAllLinks = listAllLinks + getLinks(driver,'http://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/veiculos/caminhoes-onibus-e-vans')
+        listAllLinks = listAllLinks + getLinks(driver,'http://sc.olx.com.br/oeste-de-santa-catarina/regioes-de-curitibanos-e-c-dos-lages/veiculos/caminhoes-onibus-e-vans')
+        listAllLinks = listAllLinks + getLinks(driver,'http://sc.olx.com.br/norte-de-santa-catarina/veiculos/caminhoes-onibus-e-vans')
 
         countSendMessage = 0
         for link in listAllLinks:
-            json.dumps(link)
-            driver.get(link)
 
-            showChat = driver.find_element_by_class_name('chat-client-wrapper')
+            if "olx.com.br" not in link:
+                continue
 
-            buttonShowChat = showChat.find_element_by_tag_name('button')
-            buttonShowChat.click()
+            try:
+                json.dumps(link)
+                driver.get(link)
 
-            chatContainer = driver.find_element_by_id('chat_container')
+                showChat = driver.find_element_by_class_name('chat-client-wrapper')
 
-            listMessages = chatContainer.find_element_by_class_name('list-messages')
+                buttonShowChat = showChat.find_element_by_tag_name('button')
+                buttonShowChat.click()
 
-            time.sleep(5)
+                chatContainer = driver.find_element_by_id('chat_container')
 
-            listMessagesItens = listMessages.find_elements_by_tag_name('li')
-            if len(listMessagesItens) == 0:
+                listMessages = chatContainer.find_element_by_class_name('list-messages')
 
-                message = chatContainer.find_element_by_name('message')
+                time.sleep(5)
 
-                message.send_keys(chat_message)
-                sendMessage = chatContainer.find_element_by_name('sendMessage')
+                listMessagesItens = listMessages.find_elements_by_tag_name('li')
+                if len(listMessagesItens) == 0:
 
-                sendMessage.click()
+                    message = chatContainer.find_element_by_name('message')
 
-                chatContainer.find_element_by_class_name('chat-close').click()
+                    message.send_keys(chat_message)
+                    sendMessage = chatContainer.find_element_by_name('sendMessage')
 
-                countSendMessage = countSendMessage + 1
-            else:
+                    sendMessage.click()
+
+                    chatContainer.find_element_by_class_name('chat-close').click()
+
+                    countSendMessage = countSendMessage + 1
+                else:
+                    continue
+            except:  # catch *all* exceptions
+                logging.exception("Erro no for de links, para o link %s" % link)
                 continue
 
         emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas ' + \
