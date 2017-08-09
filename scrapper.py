@@ -1,4 +1,5 @@
 # encoding=utf8
+import gc
 import logging
 import threading
 import json, time
@@ -15,6 +16,7 @@ class Scrapper(threading.Thread):
 
     def run(self):
 
+        gc.enable()
         setExecution(True)
         emailOlx = config('EMAIL')
         passwordOlx = config('PASSWORD')
@@ -61,6 +63,7 @@ class Scrapper(threading.Thread):
         print('Iniciando envio de mensagens...')
         for link in listAllLinks:
 
+            gc.collect()
             if "olx.com.br" not in link:
                 continue
             try:
@@ -107,6 +110,7 @@ class Scrapper(threading.Thread):
 
 def getLinks(driver, urlBase):
 
+    gc.collect()
     print('Salvando pesquisa de %s.' % urlBase)
     driver.get(urlBase + '?q=caminh%C3%A3o')
 
@@ -132,4 +136,5 @@ def getUrl(driver):
     for link in listLinks:
         listAllLinks.append(link.get_attribute("href"))
 
+    gc.collect()
     return listAllLinks
