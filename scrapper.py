@@ -109,32 +109,36 @@ class Scrapper(threading.Thread):
         setExecution(False)
 
 def getLinks(driver, urlBase):
+    try:
+        gc.collect()
+        print('Salvando pesquisa de %s.' % urlBase)
+        driver.get(urlBase + '?q=caminh%C3%A3o')
 
-    gc.collect()
-    print('Salvando pesquisa de %s.' % urlBase)
-    driver.get(urlBase + '?q=caminh%C3%A3o')
+        listAllLinks = getUrl(driver)
+        pagination = driver.find_element_by_class_name('module_pagination')
 
-    listAllLinks = getUrl(driver)
-    pagination = driver.find_element_by_class_name('module_pagination')
+        listPages = pagination.find_elements_by_class_name('link')
 
-    listPages = pagination.find_elements_by_class_name('link')
+        pagesSize = len(listPages) - 1
+        for pageItem in range(pagesSize):
+            url = urlBase + '?o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
+            driver.get(url)
 
-    pagesSize = len(listPages) - 1
-    for pageItem in range(pagesSize):
-        url = urlBase + '?o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
-        driver.get(url)
+            listAllLinks = listAllLinks + getUrl(driver)
 
-        listAllLinks = listAllLinks + getUrl(driver)
-
-    return listAllLinks
+        return listAllLinks
+    except:  # catch *all* exceptions
+        logging.exception("Erro no método getLinks, para a url %s" % urlBase)
 
 def getUrl(driver):
+    try:
+        listAllLinks = []
+        listLinks = driver.find_elements_by_class_name('OLXad-list-link')
 
-    listAllLinks = []
-    listLinks = driver.find_elements_by_class_name('OLXad-list-link')
+        for link in listLinks:
+            listAllLinks.append(link.get_attribute("href"))
 
-    for link in listLinks:
-        listAllLinks.append(link.get_attribute("href"))
-
-    gc.collect()
-    return listAllLinks
+        gc.collect()
+        return listAllLinks
+    except:  # catch *all* exceptions
+        logging.exception("Erro no método getUrl")
