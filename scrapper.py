@@ -70,6 +70,9 @@ class Scrapper(threading.Thread):
                 json.dumps(link)
                 driver.get(link)
 
+                print("Abrindo link %s" % link)
+                time.sleep(5)
+
                 showChat = driver.find_element_by_class_name('chat-client-wrapper')
 
                 buttonShowChat = showChat.find_element_by_tag_name('button')
