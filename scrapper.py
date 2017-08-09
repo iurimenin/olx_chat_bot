@@ -1,5 +1,4 @@
 # encoding=utf8
-import sys
 import logging
 import threading
 import json, time
@@ -7,7 +6,6 @@ from decouple import config
 from email_sender import send
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
 
 def setExecution(param):
     Scrapper.isExecution = param
@@ -21,6 +19,7 @@ class Scrapper(threading.Thread):
         emailOlx = config('EMAIL')
         passwordOlx = config('PASSWORD')
 
+        print('Iniciando...')
         if config('LOCAL', default=False, cast=bool):
             driver = webdriver.Chrome()
         else:
@@ -34,6 +33,7 @@ class Scrapper(threading.Thread):
 
             driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 
+        print('Realizando login...')
         driver.get('https://www3.olx.com.br/account/form_login/')
 
         email = driver.find_element_by_id('login_email')
@@ -45,6 +45,7 @@ class Scrapper(threading.Thread):
 
         login.click()
 
+        print('Login realizado.')
         chat_message = 'Caro amigo, vi que estás vendendo seu caminhão, onde caso algum cliente se interessar nele, ' \
                        'e precisar financiar uma parte, estou à disposição, faço financiamento e refinanciamento ' \
                        '(capital de giro) de caminhões usados à partir do ano de 1970, sem restrição de marca e ' \
@@ -57,11 +58,11 @@ class Scrapper(threading.Thread):
         listAllLinks = listAllLinks + getLinks(driver,'http://sc.olx.com.br/norte-de-santa-catarina/veiculos/caminhoes-onibus-e-vans')
 
         countSendMessage = 0
+        print('Iniciando envio de mensagens...')
         for link in listAllLinks:
 
             if "olx.com.br" not in link:
                 continue
-
             try:
                 json.dumps(link)
                 driver.get(link)
@@ -96,13 +97,17 @@ class Scrapper(threading.Thread):
                 logging.exception("Erro no for de links, para o link %s" % link)
                 continue
 
-        emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas ' + \
-                   str(countSendMessage) + ' novas mensagens!!'
-        send(emailOlx, emailMsg)
+        print('Envio de mensagens terminado')
+        emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas %s novas mensagens!!' % str(countSendMessage)
+        if config('LOCAL', default=False, cast=bool):
+            print(emailMsg)
+        else:
+            send(emailOlx, emailMsg)
         setExecution(False)
 
 def getLinks(driver, urlBase):
 
+    print('Salvando pesquisa de %s.' % urlBase)
     driver.get(urlBase + '?q=caminh%C3%A3o')
 
     listAllLinks = getUrl(driver)
