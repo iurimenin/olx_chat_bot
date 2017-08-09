@@ -82,7 +82,7 @@ class Scrapper(threading.Thread):
 
                 listMessages = chatContainer.find_element_by_class_name('list-messages')
 
-                time.sleep(5)
+                time.sleep(10)
 
                 listMessagesItens = listMessages.find_elements_by_tag_name('li')
                 if len(listMessagesItens) == 0:
