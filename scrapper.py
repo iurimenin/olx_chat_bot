@@ -60,6 +60,7 @@ class Scrapper(threading.Thread):
         listAllLinks = listAllLinks + getLinks(driver,'http://sc.olx.com.br/norte-de-santa-catarina/veiculos/caminhoes-onibus-e-vans')
 
         countSendMessage = 0
+        print('Foram encontrador no total %s' % str(listAllLinks))
         print('Iniciando envio de mensagens...')
         for link in listAllLinks:
 
