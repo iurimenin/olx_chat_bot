@@ -108,6 +108,7 @@ class Scrapper(threading.Thread):
         if config('LOCAL', default=False, cast=bool):
             print(emailMsg)
         else:
+            print(emailMsg)
             send(emailOlx, emailMsg)
         setExecution(False)
 
