@@ -11,7 +11,7 @@ def send(emailTo, emailMsg):
     server.ehlo()
     server.starttls()
     server.login(emailSender, passwordSender)
-    server.sendmail(emailSender, recipients, emailMsg)
+    server.sendmail(emailSender, recipients, emailMsg.encode('utf-8'))
     server.quit()
 
 # if __name__ == '__main__':
