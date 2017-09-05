@@ -20,7 +20,6 @@ class Scrapper(threading.Thread):
     def run(self):
 
         driver = self.getDriverWithLoggin()
-        driver.maximize_window()
 
         listAllLinks = []
         listAllLinks = listAllLinks + self.getLinks(driver,
@@ -113,6 +112,7 @@ class Scrapper(threading.Thread):
         print('Iniciando...')
         if config('LOCAL', default=False, cast=bool):
             driver = webdriver.Chrome()
+            driver.maximize_window()
         else:
             GOOGLE_CHROME_BIN = config('GOOGLE_CHROME_BIN')
             CHROMEDRIVER_PATH = config('CHROMEDRIVER_PATH')
