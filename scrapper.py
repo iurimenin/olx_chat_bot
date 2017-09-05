@@ -105,7 +105,7 @@ class Scrapper(threading.Thread):
                     continue
             except:  # catch *all* exceptions
                 logging.exception("Erro no for de links, para o link %s" % link)
-                listLinksError = listLinksError + link
+                listLinksError.append(link)
                 continue
 
         return listLinksError
