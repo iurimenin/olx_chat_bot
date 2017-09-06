@@ -17,7 +17,7 @@ class Scrapper(threading.Thread):
 
     def run(self):
 
-        driver = self.getDriverWithLoggin()
+        driver = self.get_driver_with_loggin()
 
         listAllLinks = []
         listAllLinks = listAllLinks + self.get_links(driver, Scrapper.url)
@@ -27,7 +27,7 @@ class Scrapper(threading.Thread):
         listLinksError = self.sendMessagesAndReturnErrors(driver, listAllLinks)
 
         driver.quit()
-        driver = self.getDriverWithLoggin()
+        driver = self.get_driver_with_loggin()
 
         while len(listLinksError) > 0:
             listLinksError = self.sendMessagesAndReturnErrors(driver, listLinksError)
@@ -96,7 +96,7 @@ class Scrapper(threading.Thread):
 
         return listLinksError
 
-    def getDriverWithLoggin(self):
+    def get_driver_with_loggin(self):
         gc.enable()
         Scrapper.isExecution = True
         emailOlx = config('EMAIL')
