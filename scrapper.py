@@ -9,38 +9,52 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
+def setExecution(param):
+    Scrapper.isExecution = param
+
+
 class Scrapper(threading.Thread):
     isExecution = False
     countSendMessage = 0
-    url = ''
-    local = ''
 
     def run(self):
 
-        driver = self.get_driver_with_loggin()
+        driver = self.getDriverWithLoggin()
 
         listAllLinks = []
-        listAllLinks = listAllLinks + self.get_links(driver, Scrapper.url)
+        listAllLinks = listAllLinks + self.getLinks(driver,
+                                               'http://sc.olx.com.br/florianopolis-e-regiao/'
+                                               'outras-cidades/veiculos/caminhoes-onibus-e-vans'
+                                               '?sd=2609&sd=2597&sd=2567&sd=2579&sd=2613&sd=2616&sd=2610&sd=2569'
+                                               '&sd=2570&sd=2583&sd=2615&sd=2586&sd=2600&sd=2585&sd=2578&sd=2576'
+                                               '&sd=2603&sd=2608&sd=2591&sd=2588&sd=2611&sd=2595&sd=2575&sd=2598'
+                                               '&sd=2617&sd=2571&sd=2580&sd=2568&sd=2601&sd=2599&sd=2593&sd=2582'
+                                               '&sd=2605&sd=2577&sd=2572&sd=2584&sd=2573&sd=2592&sd=2607&sd=2581'
+                                               '&sd=2618&sd=2606&sd=2604&sd=2614&sd=2596')
+        listAllLinks = listAllLinks + self.getLinks(driver,
+                                               'http://sc.olx.com.br/oeste-de-santa-catarina/regioes-de-curitibanos-e-c-dos-lages/veiculos/caminhoes-onibus-e-vans')
+        listAllLinks = listAllLinks + self.getLinks(driver,
+                                               'http://sc.olx.com.br/norte-de-santa-catarina/veiculos/caminhoes-onibus-e-vans')
 
-        print('Foram encontrados no total %s para %s' % (str(len(listAllLinks)), Scrapper.local))
+        print('Foram encontrados no total %s' % str(len(listAllLinks)))
         print('Iniciando envio de mensagens...')
         listLinksError = self.sendMessagesAndReturnErrors(driver, listAllLinks)
 
         driver.quit()
-        driver = self.get_driver_with_loggin()
+        driver = self.getDriverWithLoggin()
 
         while len(listLinksError) > 0:
             listLinksError = self.sendMessagesAndReturnErrors(driver, listLinksError)
 
         print('Envio de mensagens terminado')
-        emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas %s novas mensagens para %s!!' \
-                   % (str(Scrapper.countSendMessage), Scrapper.local)
+        emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas %s novas mensagens!!' % str(Scrapper.countSendMessage)
         if config('LOCAL', default=False, cast=bool):
             print(emailMsg)
         else:
             print(emailMsg)
             send(config('EMAIL'), emailMsg)
-            Scrapper.isExecution = False
+        setExecution(False)
+
 
     def sendMessagesAndReturnErrors(self, driver, links):
 
@@ -96,9 +110,9 @@ class Scrapper(threading.Thread):
 
         return listLinksError
 
-    def get_driver_with_loggin(self):
+    def getDriverWithLoggin(self):
         gc.enable()
-        Scrapper.isExecution = True
+        setExecution(True)
         emailOlx = config('EMAIL')
         passwordOlx = config('PASSWORD')
 
@@ -133,7 +147,8 @@ class Scrapper(threading.Thread):
 
         return driver
 
-    def get_links(self, driver, urlBase):
+
+    def getLinks(self, driver, urlBase):
         try:
             gc.collect()
             print('Salvando pesquisa de %s.' % urlBase)
@@ -149,26 +164,24 @@ class Scrapper(threading.Thread):
             except:
                 logging.exception("Nenhuma propaganda mostrada")
 
-            listAllLinks = self.get_links_url(driver)
+            listAllLinks = self.getUrl(driver)
             pagination = driver.find_element_by_class_name('module_pagination')
 
             listPages = pagination.find_elements_by_class_name('link')
 
             pagesSize = len(listPages) - 1
             for pageItem in range(pagesSize):
-                if "?" not in urlBase:
-                    url = urlBase + '?o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
-                else:
-                    url = urlBase + '&o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
+                url = urlBase + '?o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
                 driver.get(url)
 
-                listAllLinks = listAllLinks + self.get_links_url(driver)
+                listAllLinks = listAllLinks + self.getUrl(driver)
 
             return listAllLinks
         except:  # catch *all* exceptions
             logging.exception("Erro no método getLinks, para a url %s" % urlBase)
 
-    def get_links_url(self, driver):
+
+    def getUrl(self, driver):
         try:
             listAllLinks = []
             listLinks = driver.find_elements_by_class_name('OLXad-list-link')
