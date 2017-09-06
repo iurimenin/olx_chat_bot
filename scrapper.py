@@ -9,23 +9,20 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
-def setExecution(param):
-    Scrapper.isExecution = param
-
-
 class Scrapper(threading.Thread):
     isExecution = False
     countSendMessage = 0
     url = ''
+    local = ''
 
     def run(self):
 
         driver = self.getDriverWithLoggin()
 
         listAllLinks = []
-        listAllLinks = listAllLinks + self.getLinks(driver, Scrapper.url)
+        listAllLinks = listAllLinks + self.get_links(driver, Scrapper.url)
 
-        print('Foram encontrados no total %s' % str(len(listAllLinks)))
+        print('Foram encontrados no total %s para %s' % (str(len(listAllLinks)), Scrapper.local))
         print('Iniciando envio de mensagens...')
         listLinksError = self.sendMessagesAndReturnErrors(driver, listAllLinks)
 
@@ -36,14 +33,14 @@ class Scrapper(threading.Thread):
             listLinksError = self.sendMessagesAndReturnErrors(driver, listLinksError)
 
         print('Envio de mensagens terminado')
-        emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas %s novas mensagens!!' % str(
-            Scrapper.countSendMessage)
+        emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas %s novas mensagens para %s!!' \
+                   % (str(Scrapper.countSendMessage), Scrapper.local)
         if config('LOCAL', default=False, cast=bool):
             print(emailMsg)
         else:
             print(emailMsg)
             send(config('EMAIL'), emailMsg)
-        setExecution(False)
+            Scrapper.isExecution = False
 
     def sendMessagesAndReturnErrors(self, driver, links):
 
@@ -101,7 +98,7 @@ class Scrapper(threading.Thread):
 
     def getDriverWithLoggin(self):
         gc.enable()
-        setExecution(True)
+        Scrapper.isExecution = True
         emailOlx = config('EMAIL')
         passwordOlx = config('PASSWORD')
 
@@ -136,7 +133,7 @@ class Scrapper(threading.Thread):
 
         return driver
 
-    def getLinks(self, driver, urlBase):
+    def get_links(self, driver, urlBase):
         try:
             gc.collect()
             print('Salvando pesquisa de %s.' % urlBase)
@@ -152,23 +149,26 @@ class Scrapper(threading.Thread):
             except:
                 logging.exception("Nenhuma propaganda mostrada")
 
-            listAllLinks = self.getUrl(driver)
+            listAllLinks = self.get_links_url(driver)
             pagination = driver.find_element_by_class_name('module_pagination')
 
             listPages = pagination.find_elements_by_class_name('link')
 
             pagesSize = len(listPages) - 1
             for pageItem in range(pagesSize):
-                url = urlBase + '?o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
+                if "?" not in urlBase:
+                    url = urlBase + '?o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
+                else:
+                    url = urlBase + '&o=' + str(pageItem + 2) + '&q=caminh%C3%A3o'
                 driver.get(url)
 
-                listAllLinks = listAllLinks + self.getUrl(driver)
+                listAllLinks = listAllLinks + self.get_links_url(driver)
 
             return listAllLinks
         except:  # catch *all* exceptions
             logging.exception("Erro no método getLinks, para a url %s" % urlBase)
 
-    def getUrl(self, driver):
+    def get_links_url(self, driver):
         try:
             listAllLinks = []
             listLinks = driver.find_elements_by_class_name('OLXad-list-link')

@@ -1,3 +1,4 @@
+# encoding=utf8
 from decouple import config
 from scrapper import Scrapper
 from flask import Flask, render_template
@@ -23,6 +24,9 @@ def floripa():
                                                '&sd=2617&sd=2571&sd=2580&sd=2568&sd=2601&sd=2599&sd=2593&sd=2582' \
                                                '&sd=2605&sd=2577&sd=2572&sd=2584&sd=2573&sd=2592&sd=2607&sd=2581' \
                                                '&sd=2618&sd=2606&sd=2604&sd=2614&sd=2596'
+
+        Scrapper.local = 'Florianópolis e região'
+
         scrapper.start()
         return render_template('sucess.html')
 
@@ -36,6 +40,7 @@ def oeste():
     else:
         Scrapper.url = 'http://sc.olx.com.br/oeste-de-santa-catarina/' \
                        'regioes-de-curitibanos-e-c-dos-lages/veiculos/caminhoes-onibus-e-vans'
+        Scrapper.local = 'Oeste de Santa Catarina'
         scrapper.start()
         return render_template('sucess.html')
 
@@ -48,6 +53,7 @@ def norte():
         return render_template('running.html')
     else:
         Scrapper.url = 'http://sc.olx.com.br/norte-de-santa-catarina/veiculos/caminhoes-onibus-e-vans'
+        Scrapper.local = 'Norte de Santa Catarina'
         scrapper.start()
         return render_template('sucess.html')
 
