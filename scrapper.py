@@ -42,12 +42,7 @@ class Scrapper(threading.Thread):
         print('Iniciando envio de mensagens...')
         listLinksError = self.sendMessagesAndReturnErrors(driver, listAllLinks)
 
-        while len(listLinksError) > 0:
-            print("%s links falharam, tentando novamente" % str(len(listLinksError)))
-            driver.quit()
-            driver = self.getDriverWithLoggin()
-            listLinksError = self.sendMessagesAndReturnErrors(driver, listLinksError)
-
+        print("%s links falharam" % str(len(listLinksError)))
         print('Envio de mensagens terminado')
         emailMsg = 'Olá, foi finalizado o envio dos chats, e foram enviadas %s novas mensagens!!' % str(
             Scrapper.countSendMessage)
